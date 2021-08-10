@@ -12,5 +12,5 @@ interface MatchDao {
     suspend fun delete(match: Match)
 
     @Query("SELECT * FROM matches")
-    suspend fun getPhotos(): List<Match>
+    suspend fun getAll(): List<Match>
 }

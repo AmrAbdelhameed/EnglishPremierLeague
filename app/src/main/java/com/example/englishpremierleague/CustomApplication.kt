@@ -3,6 +3,8 @@ package com.example.englishpremierleague
 import androidx.multidex.MultiDexApplication
 import com.example.englishpremierleague.data.repositoryimpl.MatchRepositoryImpl
 import com.example.englishpremierleague.data.source.local.DatabaseBuilder
+import com.example.englishpremierleague.data.source.local.helper.DatabaseHelper
+import com.example.englishpremierleague.data.source.local.helper.DatabaseHelperImpl
 import com.example.englishpremierleague.data.source.remote.ApiBuilder
 import com.example.englishpremierleague.data.source.remote.helper.ApiHelper
 import com.example.englishpremierleague.data.source.remote.helper.ApiHelperImpl
@@ -26,7 +28,9 @@ class CustomApplication : MultiDexApplication() {
             viewModel { MainViewModel(get()) }
 
             single<ApiHelper> { ApiHelperImpl(get()) }
-            single<MatchRepository> { MatchRepositoryImpl(get()) }
+            single<DatabaseHelper> { DatabaseHelperImpl(get()) }
+
+            single<MatchRepository> { MatchRepositoryImpl(get(), get()) }
             single { MatchUseCase(get()) }
         }
 

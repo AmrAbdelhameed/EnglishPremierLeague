@@ -2,11 +2,9 @@ package com.example.englishpremierleague.domain.entity.remote
 
 data class Match(
     val id: Int,
-    val awayTeam: AwayTeam,
     val homeTeam: HomeTeam,
-    val matchday: Int,
-    val score: Score,
-    val stage: String,
+    val awayTeam: AwayTeam,
     val status: String,
+    val score: Score,
     val utcDate: String
 )

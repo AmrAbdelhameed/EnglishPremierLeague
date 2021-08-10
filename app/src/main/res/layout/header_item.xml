@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/header_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/_16sdp"
+    android:paddingTop="@dimen/_8sdp"
+    android:paddingEnd="@dimen/_16sdp"
+    android:paddingBottom="@dimen/_8sdp"
+    android:textColor="@color/white"
+    android:textSize="@dimen/_16ssp"
+    android:textStyle="bold"
+    tools:text="Fri, 13 Aug" />

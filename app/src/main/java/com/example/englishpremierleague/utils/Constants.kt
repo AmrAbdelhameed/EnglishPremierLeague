@@ -14,4 +14,18 @@ object Constants {
     object Database {
         const val NAME = "${BuildConfig.APPLICATION_ID}.db"
     }
+
+    object MatchStatus{
+        const val SCHEDULED = "SCHEDULED"
+        const val HALF_TIME = "HALF-TIME"
+        const val FULL_TIME = "FULL-TIME"
+        const val EXTRA_TIME = "EXTRA-TIME"
+        const val PENALTIES = "PENALTIES"
+    }
+
+    object Day{
+        const val YESTERDAY = "Yesterday"
+        const val TODAY = "Today"
+        const val TOMORROW = "Tomorrow"
+    }
 }
