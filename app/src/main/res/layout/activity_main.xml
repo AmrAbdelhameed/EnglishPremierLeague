@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".presentation.view.MainActivity">
+    tools:context=".presentation.main.view.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                 android:paddingBottom="@dimen/_2sdp">
 
                 <TextView
-                    android:id="@+id/input1"
+                    android:id="@+id/from_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -65,13 +65,13 @@
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/delete1"
+                    app:layout_constraintEnd_toStartOf="@+id/from_delete"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="from: Sat, 13 Aug" />
 
                 <ImageView
-                    android:id="@+id/delete1"
+                    android:id="@+id/from_delete"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_marginStart="@dimen/_2sdp"
@@ -96,7 +96,7 @@
                 android:paddingBottom="@dimen/_2sdp">
 
                 <TextView
-                    android:id="@+id/input2"
+                    android:id="@+id/to_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -105,13 +105,13 @@
                     android:textColor="@color/black"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/delete2"
+                    app:layout_constraintEnd_toStartOf="@+id/to_delete"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="to: Sat, 13 Aug" />
 
                 <ImageView
-                    android:id="@+id/delete2"
+                    android:id="@+id/to_delete"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
                     android:layout_marginStart="@dimen/_4sdp"
@@ -138,7 +138,7 @@
             android:paddingBottom="@dimen/_2sdp">
 
             <TextView
-                android:id="@+id/input3"
+                android:id="@+id/status_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -147,13 +147,13 @@
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/delete3"
+                app:layout_constraintEnd_toStartOf="@+id/status_delete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="status: SCHEDULED" />
 
             <ImageView
-                android:id="@+id/delete3"
+                android:id="@+id/status_delete"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_4sdp"

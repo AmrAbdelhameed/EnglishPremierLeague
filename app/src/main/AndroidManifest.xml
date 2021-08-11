@@ -14,7 +14,7 @@
         android:theme="@style/Theme.EnglishPremierLeague"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".presentation.view.MainActivity"
+            android:name="com.example.englishpremierleague.presentation.main.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
