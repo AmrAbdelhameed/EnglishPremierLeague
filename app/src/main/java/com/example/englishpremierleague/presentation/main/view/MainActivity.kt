@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun statusClickListener() {
         status.setOnClickListener {
-            customAlert(this@MainActivity) {
+            this@MainActivity.customAlert {
                 filterDataItem.status = it
                 status_text.text = "${getString(R.string.status)}: ${filterDataItem.status}"
                 mainViewModel.filterData(filterDataItem)
@@ -126,14 +126,14 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun toClickListener() {
         to.setOnClickListener {
-            customDialog(this@MainActivity) {
-                to_text.text = "${getString(R.string.to)}: ${extractDate(it.time)}"
+            this@MainActivity.customDialog {
+                to_text.text = "${getString(R.string.to)}: ${it.time.extractDate()}"
                 it.set(
                     it.get(Calendar.YEAR),
                     it.get(Calendar.MONTH),
                     it.get(Calendar.DAY_OF_MONTH) + 1
                 )
-                filterDataItem.to = extractDateOnly(it.time)
+                filterDataItem.to = it.time.extractDateOnly()
                 mainViewModel.filterData(filterDataItem)
             }
         }
@@ -147,14 +147,14 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun fromClickListener() {
         from.setOnClickListener {
-            customDialog(this@MainActivity) {
-                from_text.text = "${getString(R.string.from)}: ${extractDate(it.time)}"
+            this@MainActivity.customDialog {
+                from_text.text = "${getString(R.string.from)}: ${it.time.extractDate()}"
                 it.set(
                     it.get(Calendar.YEAR),
                     it.get(Calendar.MONTH),
                     it.get(Calendar.DAY_OF_MONTH) - 1
                 )
-                filterDataItem.from = extractDateOnly(it.time)
+                filterDataItem.from = it.time.extractDateOnly()
                 mainViewModel.filterData(filterDataItem)
             }
         }

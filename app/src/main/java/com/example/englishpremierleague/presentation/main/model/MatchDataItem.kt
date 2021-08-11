@@ -33,15 +33,15 @@ data class MatchDataItem(
     }
 
     @ExperimentalTime
-    val formatDate: String = when (compareDates(convertDate(utcDate))) {
+    val formatDate: String = when (utcDate.convertDate()?.compareDates()) {
         -1 -> YESTERDAY
         0 -> TODAY
         1 -> TOMORROW
-        else -> extractDateOnly(utcDate)
+        else -> utcDate.extractDateOnly()
     }
 
     val scoreOrTime: String = when (status) {
         HALF_TIME, FULL_TIME, EXTRA_TIME, PENALTIES -> { scoreStr }
-        else -> { extractTimeOnly(utcDate) }
+        else -> { utcDate.extractTimeOnly() }
     }
 }

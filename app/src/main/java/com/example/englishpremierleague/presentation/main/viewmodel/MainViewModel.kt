@@ -2,14 +2,14 @@ package com.example.englishpremierleague.presentation.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.englishpremierleague.core.extension.convertDateOnly
+import com.example.englishpremierleague.core.extension.extractDateOnly
 import com.example.englishpremierleague.domain.model.local.Match
 import com.example.englishpremierleague.domain.usecase.MatchUseCase
 import com.example.englishpremierleague.presentation.main.intent.MainIntent
-import com.example.englishpremierleague.presentation.main.util.FilterObject
 import com.example.englishpremierleague.presentation.main.model.MatchDataItem
+import com.example.englishpremierleague.presentation.main.util.FilterObject
 import com.example.englishpremierleague.presentation.main.viewstate.MainState
-import com.example.englishpremierleague.core.extension.convertDateOnly
-import com.example.englishpremierleague.core.extension.extractDateOnly
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,13 +44,13 @@ class MainViewModel(
         }
     }
 
-    fun fetchFavMatches() {
+    private fun fetchFavMatches() {
         viewModelScope.launch {
             matchesId.send(matchUseCase.getFavMatches().map { it.matchId })
         }
     }
 
-    fun fetchMatches() {
+    private fun fetchMatches() {
         viewModelScope.launch {
             for (ids in matchesId) {
                 _state.value = MainState.Loading
@@ -74,15 +74,15 @@ class MainViewModel(
         }
     }
 
-    private fun setHeaderId(matches: List<MatchDataItem>) : List<MatchDataItem>{
+    private fun setHeaderId(matches: List<MatchDataItem>): List<MatchDataItem> {
         var firstHeaderId: Long = 0
-        var firstDate: String = extractDateOnly(matches[0].utcDate)
+        var firstDate: String = matches[0].utcDate.extractDateOnly()
         for (match in matches) {
-            if (firstDate != extractDateOnly(match.utcDate)) {
-                firstDate = extractDateOnly(match.utcDate)
+            if (firstDate != match.utcDate.extractDateOnly()) {
+                firstDate = match.utcDate.extractDateOnly()
                 firstHeaderId++
             }
-            match.headerId= firstHeaderId
+            match.headerId = firstHeaderId
         }
         return matches
     }
@@ -96,13 +96,13 @@ class MainViewModel(
                         if (filterDataItem.status != "all") it.status == filterDataItem.status else true
                     }
                     .filter {
-                        if (filterDataItem.from != "from") convertDateOnly(it.utcDate)?.after(
-                            convertDateOnly(filterDataItem.from)
+                        if (filterDataItem.from != "from") it.utcDate.convertDateOnly()?.after(
+                            filterDataItem.from.convertDateOnly()
                         ) == true else true
                     }
                     .filter {
-                        if (filterDataItem.to != "to") convertDateOnly(it.utcDate)?.before(
-                            convertDateOnly(filterDataItem.to)
+                        if (filterDataItem.to != "to") it.utcDate.convertDateOnly()?.before(
+                            filterDataItem.to.convertDateOnly()
                         ) == true else {
                             true
                         }
