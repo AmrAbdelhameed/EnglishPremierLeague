@@ -6,22 +6,15 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class CustomApplication : MultiDexApplication() {
-    @ExperimentalCoroutinesApi
+@ExperimentalCoroutinesApi
+open class CustomApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         startKoin {
             androidContext(this@CustomApplication)
-            modules(
-                listOf(
-                    networkModule,
-                    databaseModule,
-                    helperModule,
-                    repositoryModule,
-                    useCaseModule,
-                    viewModelModule
-                )
-            )
+            modules(provideDependency())
         }
     }
+
+    open fun provideDependency() = appComponent
 }

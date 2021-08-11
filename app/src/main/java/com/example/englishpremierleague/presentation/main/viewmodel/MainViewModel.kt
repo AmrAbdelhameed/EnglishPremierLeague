@@ -44,13 +44,13 @@ class MainViewModel(
         }
     }
 
-    private fun fetchFavMatches() {
+    fun fetchFavMatches() {
         viewModelScope.launch {
             matchesId.send(matchUseCase.getFavMatches().map { it.matchId })
         }
     }
 
-    private fun fetchMatches() {
+    fun fetchMatches() {
         viewModelScope.launch {
             for (ids in matchesId) {
                 _state.value = MainState.Loading

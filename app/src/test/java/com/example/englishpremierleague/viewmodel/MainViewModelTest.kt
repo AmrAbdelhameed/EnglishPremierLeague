@@ -1,65 +1,73 @@
 package com.example.englishpremierleague.viewmodel
 
+import android.view.View
+import android.widget.Toast
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.englishpremierleague.domain.model.remote.AwayTeam
-import com.example.englishpremierleague.domain.model.remote.HomeTeam
-import com.example.englishpremierleague.domain.model.remote.Match
-import com.example.englishpremierleague.domain.model.remote.Score
+import androidx.lifecycle.lifecycleScope
+import com.example.englishpremierleague.base.BaseUnitTest
+import com.example.englishpremierleague.di.configureTestAppComponent
+import com.example.englishpremierleague.domain.model.remote.MatchResponse
 import com.example.englishpremierleague.domain.usecase.MatchUseCase
+import com.example.englishpremierleague.presentation.main.model.MatchDataItem
 import com.example.englishpremierleague.presentation.main.viewmodel.MainViewModel
+import com.example.englishpremierleague.presentation.main.viewstate.MainState
+import com.google.gson.Gson
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
+import junit.framework.Assert.assertNotNull
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import org.junit.Assert.assertEquals
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-import org.mockito.junit.MockitoJUnitRunner
+import org.junit.runners.JUnit4
+import org.koin.core.context.startKoin
 
 @ExperimentalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
-class MainViewModelTest {
+@RunWith(JUnit4::class)
+class MainViewModelTest : BaseUnitTest() {
 
-    private lateinit var mainViewModel: MainViewModel
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
-    @Mock
+    lateinit var mainViewModel: MainViewModel
+
+    @MockK
     lateinit var matchUseCase: MatchUseCase
 
-    @Rule
-    @JvmField
-    var instantTaskExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
-
-    private var testDispatcher = TestCoroutineDispatcher()
-    private var testCoroutineScope = TestCoroutineScope()
-
-
     @Before
-    fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        mainViewModel = MainViewModel(matchUseCase)
+    fun start() {
+        super.setUp()
+        MockKAnnotations.init(this)
+        startKoin { modules(configureTestAppComponent(getMockWebServerUrl())) }
     }
 
     @Test
-    fun getMovies_lessThan20Movies_hasReachedMaxShouldBeTrue() {
-//        val list = List(5) {
-//            Match(
-//                327362,
-//                HomeTeam(402,  "Brentford FC"),
-//                AwayTeam(57, "Arsenal FC"),
-//                "SCHEDULED",
-//                null,
-//                "2021-08-13T19:00:00Z"
-//            )
-//        }
-//        testCoroutineScope.launch(testDispatcher) {
-//            `when`(matchUseCase.getMatches()).thenReturn(list)
-//            mainViewModel.fetchMatches()
-//            assertEquals(true, true)
-//        }
+    fun test_main_view_model_expected_value() {
+        mainViewModel = MainViewModel(matchUseCase)
+
+        val sampleResponse = getJson("matches.json")
+        val jsonObj = Gson().fromJson(sampleResponse, MatchResponse::class.java)
+
+        coEvery { matchUseCase.getMatches() } returns jsonObj.matches
+
+        mainViewModel.fetchMatches()
+
+        var matches: List<MatchDataItem>? = null
+            runBlockingTest {
+                mainViewModel.state.collect {
+                    when (it) {
+                        is MainState.Success -> {
+                            matches = it.matches
+                        }
+                    }
+                }
+            }
+        assertNotNull(matches)
     }
 }
