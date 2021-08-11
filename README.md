@@ -1,11 +1,11 @@
-# Android - kotlin - Coroutines - MVI - Clean Architectural - Koin - Unit Test - UI Test
+# Android - kotlin - Clean Architectural - MVI - Coroutines - Koin - Unit Test - UI Test
  
 It's a sample project that created by the latest Android technologies and frameworks to be a reference/base for everyone want to start his own project/app much faster.
 
 Brief :  sample app consist of one screens:-
--  Main Screen.
+-  Main Screen (list of matches in premier league).
 
-![alt text] <img src="code_structure.jpeg" width="250"/>
+<img src="code_structure.jpeg" width="250"/>
 
 # Technologies and Frameworks : 
  
@@ -18,7 +18,7 @@ https://business.udemy.com/blog/kotlin-vs-java-9-benefits-of-kotlin-for-your-bus
 
 # Design Patterns & Code structure
 
-- ### Clean code Archtiecture
+### Clean code Archtiecture
 
 Clean architecture is a software design paradigm that separates the elements of a design into layers. The main rule of clean architecture is that code dependencies can only come from the outer levels inward. Code on the inner layers can have no knowledge of functions on the outer layers. As below we can see the 
 
@@ -30,7 +30,7 @@ Clean architecture is a software design paradigm that separates the elements of 
 - Interface Adapters: This set of adapters convert data from the format most convenient for the use cases and entities. - Presenters and Controllers belong here.
 - Frameworks and Drivers: This is where all the details go: UI, tools, frameworks, etc.
 
-- ### MVI
+### MVI
 MVI stands for Model-View-Intent. MVI is one of the newest architecture patterns for Android, inspired by the unidirectional and cyclical nature of the Cycle.js framework.
 
 - 1- Model represents a state. Models in MVI should be immutable to ensure a unidirectional data flow between them and the other layers in your architecture.
@@ -39,7 +39,7 @@ MVI stands for Model-View-Intent. MVI is one of the newest architecture patterns
 
 - 3- Intent represents an intention or a desire to perform an action, either by the user or the app itself. For every action, a View receives an Intent. The Presenter observes the Intent, and Models translate it into a new state.
 
-![alt text] <img src="mvi.jpeg" width="250"/>
+<img src="mvi.jpeg" width="250"/>
 
 
 ## Dependency Injection
