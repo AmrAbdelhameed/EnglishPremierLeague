@@ -38,7 +38,7 @@ class MatchRepositoryTest : BaseUnitTest(){
     @Test
     fun test_matches_repository_returns_expected_value() =  runBlocking {
         mockNetworkResponseWithFileContent("matches.json", HttpURLConnection.HTTP_OK)
-        val dataReceived = matchRepository.getMatchResponse()
+        val dataReceived = matchRepository.getMatchList()
         assertNotNull(dataReceived)
     }
 }

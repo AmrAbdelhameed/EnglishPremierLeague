@@ -1,6 +1,5 @@
 package com.example.englishpremierleague.domain.model.remote
 
-data class MatchResponse(
-    val count: Int,
+data class MatchList(
     val matches: List<Match>
 )

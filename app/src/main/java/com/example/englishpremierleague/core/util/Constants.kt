@@ -21,17 +21,23 @@ object Constants {
         const val FULL_TIME = "FULL-TIME"
         const val EXTRA_TIME = "EXTRA-TIME"
         const val PENALTIES = "PENALTIES"
+        const val FINISHED = "FINISHED"
     }
 
     object Day{
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
         const val TOMORROW = "Tomorrow"
-        const val OTHER = "Other"
     }
 
     object MatchTypes{
         const val ITEM = 1
         const val LIST = 2
+    }
+
+    object FilterDefaults{
+        const val FROM = "from"
+        const val TO = "to"
+        const val ALL = "all"
     }
 }

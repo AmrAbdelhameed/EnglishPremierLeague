@@ -11,7 +11,6 @@ import com.example.englishpremierleague.core.extension.*
 import com.example.englishpremierleague.domain.model.local.Match
 import com.example.englishpremierleague.presentation.main.adapter.MatchesAdapter
 import com.example.englishpremierleague.presentation.main.intent.MainIntent
-import com.example.englishpremierleague.presentation.main.util.FilterObject
 import com.example.englishpremierleague.presentation.main.viewmodel.MainViewModel
 import com.example.englishpremierleague.presentation.main.viewstate.MainState
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
@@ -27,7 +26,6 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
     private lateinit var matchesAdapter: MatchesAdapter
-    private val filterDataItem: FilterObject = FilterObject
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,26 +44,22 @@ class MainActivity : AppCompatActivity() {
         matchesAdapter.registerCustomAdapterDataObserver(headersDecor)
 
         matchesAdapter.setOnFavClicked {
-            val match = Match(
+            mainViewModel.match = Match(
                 matchId = it.id, homeTeam = it.homeName, awayTeam = it.awayName,
                 status = it.status, score = it.scoreStr, utcDate = it.utcDate
             )
             if (!it.isFav) {
-                mainViewModel.favMatch(match)
+                lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FavMatch) }
             } else {
-                mainViewModel.unFavMatch(match)
+                lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.UnFavFavMatch) }
             }
             it.isFav = !it.isFav
-            mainViewModel.filterData(filterDataItem)
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
         }
 
         runBlocking {
-            lifecycleScope.launch {
-                mainViewModel.mainIntent.send(MainIntent.FetchFavMatches)
-            }
-            lifecycleScope.launch {
-                mainViewModel.mainIntent.send(MainIntent.FetchMatches)
-            }
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FetchFavMatches) }
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FetchMatches) }
         }
     }
 
@@ -102,8 +96,8 @@ class MainActivity : AppCompatActivity() {
     private fun toggleClickListener() {
         iv_toggle.setOnClickListener {
             iv_toggle.isActivated = !iv_toggle.isActivated
-            filterDataItem.fav = !filterDataItem.fav
-            mainViewModel.filterData(filterDataItem)
+            mainViewModel.filterObject.fav = !mainViewModel.filterObject.fav
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
         }
     }
 
@@ -111,15 +105,16 @@ class MainActivity : AppCompatActivity() {
     private fun statusClickListener() {
         status.setOnClickListener {
             this@MainActivity.customAlert {
-                filterDataItem.status = it
-                status_text.text = "${getString(R.string.status)}: ${filterDataItem.status}"
-                mainViewModel.filterData(filterDataItem)
+                mainViewModel.filterObject.status = it
+                status_text.text =
+                    "${getString(R.string.status)}: ${mainViewModel.filterObject.status}"
+                lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
             }
         }
         status_delete.setOnClickListener {
-            filterDataItem.status = getString(R.string.all)
-            status_text.text = filterDataItem.status
-            mainViewModel.filterData(filterDataItem)
+            mainViewModel.filterObject.status = getString(R.string.all)
+            status_text.text = mainViewModel.filterObject.status
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
         }
     }
 
@@ -133,14 +128,14 @@ class MainActivity : AppCompatActivity() {
                     it.get(Calendar.MONTH),
                     it.get(Calendar.DAY_OF_MONTH) + 1
                 )
-                filterDataItem.to = it.time.extractDateOnly()
-                mainViewModel.filterData(filterDataItem)
+                mainViewModel.filterObject.to = it.time.extractDateOnly()
+                lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
             }
         }
         to_delete.setOnClickListener {
-            filterDataItem.to = getString(R.string.to)
-            to_text.text = filterDataItem.to
-            mainViewModel.filterData(filterDataItem)
+            mainViewModel.filterObject.to = getString(R.string.to)
+            to_text.text = mainViewModel.filterObject.to
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
         }
     }
 
@@ -154,14 +149,14 @@ class MainActivity : AppCompatActivity() {
                     it.get(Calendar.MONTH),
                     it.get(Calendar.DAY_OF_MONTH) - 1
                 )
-                filterDataItem.from = it.time.extractDateOnly()
-                mainViewModel.filterData(filterDataItem)
+                mainViewModel.filterObject.from = it.time.extractDateOnly()
+                lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
             }
         }
         from_delete.setOnClickListener {
-            filterDataItem.from = getString(R.string.from)
-            from_text.text = filterDataItem.from
-            mainViewModel.filterData(filterDataItem)
+            mainViewModel.filterObject.from = getString(R.string.from)
+            from_text.text = mainViewModel.filterObject.from
+            lifecycleScope.launch { mainViewModel.mainIntent.send(MainIntent.FilterMatches) }
         }
     }
 }

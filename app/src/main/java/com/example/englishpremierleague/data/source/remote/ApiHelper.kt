@@ -1,7 +1,7 @@
 package com.example.englishpremierleague.data.source.remote
 
-import com.example.englishpremierleague.domain.model.remote.MatchResponse
+import com.example.englishpremierleague.domain.model.remote.MatchList
 
 interface ApiHelper {
-    suspend fun getMatchResponse(): MatchResponse
+    suspend fun getMatchList(): MatchList
 }

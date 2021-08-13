@@ -8,7 +8,6 @@ import android.text.format.DateUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.example.englishpremierleague.R
 import com.example.englishpremierleague.core.util.Constants
-import com.example.englishpremierleague.core.util.Constants.Day.OTHER
 import com.example.englishpremierleague.core.util.Constants.Day.TODAY
 import com.example.englishpremierleague.core.util.Constants.Day.TOMORROW
 import com.example.englishpremierleague.core.util.Constants.Day.YESTERDAY
@@ -102,7 +101,8 @@ fun Context.customAlert(selected: (String) -> Unit) {
         Constants.MatchStatus.HALF_TIME,
         Constants.MatchStatus.FULL_TIME,
         Constants.MatchStatus.EXTRA_TIME,
-        Constants.MatchStatus.PENALTIES
+        Constants.MatchStatus.PENALTIES,
+        Constants.MatchStatus.FINISHED
     )
     val builder = AlertDialog.Builder(this)
     builder.setTitle(this.getString(R.string.choose_status))

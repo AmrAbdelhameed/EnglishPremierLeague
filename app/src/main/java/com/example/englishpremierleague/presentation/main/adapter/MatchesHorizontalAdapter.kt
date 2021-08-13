@@ -1,6 +1,5 @@
 package com.example.englishpremierleague.presentation.main.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -28,11 +27,5 @@ class MatchesHorizontalAdapter(private var matchesList: List<MatchDataItem>) :
 
     fun setOnFavClicked(onFavClicked: (MatchDataItem) -> Unit) {
         this.onFavClicked = onFavClicked
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setItems(_matchesList: List<MatchDataItem>) {
-        matchesList = _matchesList
-        notifyDataSetChanged()
     }
 }

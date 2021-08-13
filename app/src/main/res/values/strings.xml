@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Premier League</string>
-    <string name="from">from</string>
-    <string name="to">to</string>
     <string name="choose_status">Choose a status.</string>
     <string name="status">status</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
     <string name="all">all</string>
-    <string name="favorite_list">Favorite List</string>
-    <string name="entire_list">Entire List</string>
 </resources>

@@ -6,7 +6,7 @@ import com.example.englishpremierleague.domain.model.local.Match
 import com.example.englishpremierleague.domain.repository.MatchRepository
 
 class MatchRepositoryImpl(private val apiHelper: ApiHelper, private val databaseHelper: DatabaseHelper) : MatchRepository {
-    override suspend fun getMatchResponse() = apiHelper.getMatchResponse()
+    override suspend fun getMatchList() = apiHelper.getMatchList()
 
     override suspend fun favMatch(match: Match)= databaseHelper.insertMatch(match)
 

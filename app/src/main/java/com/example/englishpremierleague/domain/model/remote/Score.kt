@@ -6,5 +6,5 @@ data class Score(
     val fullTime: FullTime,
     val halfTime: HalfTime,
     val penalties: Penalties,
-    val winner: Any
+    val winner: String? = null
 )

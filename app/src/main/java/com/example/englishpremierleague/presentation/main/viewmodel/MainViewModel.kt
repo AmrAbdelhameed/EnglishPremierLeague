@@ -3,8 +3,9 @@ package com.example.englishpremierleague.presentation.main.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.englishpremierleague.core.extension.convertDateOnly
-import com.example.englishpremierleague.core.extension.getDay
 import com.example.englishpremierleague.core.extension.extractDateOnly
+import com.example.englishpremierleague.core.extension.getDay
+import com.example.englishpremierleague.core.util.Constants
 import com.example.englishpremierleague.core.util.Constants.Day.TODAY
 import com.example.englishpremierleague.core.util.Constants.Day.TOMORROW
 import com.example.englishpremierleague.domain.model.local.Match
@@ -27,12 +28,13 @@ class MainViewModel(
 ) : ViewModel() {
     val mainIntent = Channel<MainIntent>(Channel.UNLIMITED)
     private val _state = MutableStateFlow<MainState>(MainState.Idle)
-    val state: StateFlow<MainState>
-        get() = _state
-    private var matchesList: MutableList<MatchDataItem> = mutableListOf()
+    val state: StateFlow<MainState> = _state
     private val matchesId = Channel<List<Int>>(1)
+    private var matchesList: MutableList<MatchDataItem> = mutableListOf()
     private var todayMatches: List<MatchDataItem> = arrayListOf()
     private var tomorrowMatches: List<MatchDataItem> = arrayListOf()
+    var filterObject: FilterObject = FilterObject
+    lateinit var match: Match
 
     init {
         handleIntent()
@@ -44,6 +46,9 @@ class MainViewModel(
                 when (it) {
                     is MainIntent.FetchMatches -> fetchMatches()
                     is MainIntent.FetchFavMatches -> fetchFavMatches()
+                    is MainIntent.FilterMatches -> filterMatches()
+                    is MainIntent.FavMatch -> favMatch()
+                    is MainIntent.UnFavFavMatch -> unFavMatch()
                 }
             }
         }
@@ -76,8 +81,8 @@ class MainViewModel(
                     matchesList = tmpMatchesList.filter {
                         it.utcDate.getDay() != TODAY
                     }.filter {
-                            it.utcDate.getDay() != TOMORROW
-                        } as MutableList<MatchDataItem>
+                        it.utcDate.getDay() != TOMORROW
+                    } as MutableList<MatchDataItem>
                     if (tomorrowMatches.isNotEmpty()) {
                         val matchDataItem = tomorrowMatches[0]
                         matchDataItem.matches = tomorrowMatches
@@ -109,34 +114,37 @@ class MainViewModel(
         return matches
     }
 
-    fun filterData(filterDataItem: FilterObject) {
+    private fun filterMatches() {
         viewModelScope.launch {
             _state.value = MainState.Loading
             _state.value = try {
                 var tmpMatchesList = matchesList.filter {
                     it.utcDate.getDay() != TODAY
-                }.filter { it.utcDate.getDay() != TOMORROW
+                }.filter {
+                    it.utcDate.getDay() != TOMORROW
                 } as MutableList<MatchDataItem>
 
                 tmpMatchesList = tmpMatchesList.filter {
-                    if (filterDataItem.status != "all") it.status == filterDataItem.status else true
+                    if (filterObject.status != Constants.FilterDefaults.ALL) it.status == filterObject.status else true
                 }.filter {
-                    if (filterDataItem.from != "from") it.utcDate.convertDateOnly().after(
-                        filterDataItem.from.convertDateOnly()
-                    ) else true
+                    if (filterObject.from != Constants.FilterDefaults.FROM) it.utcDate.convertDateOnly()
+                        .after(
+                            filterObject.from.convertDateOnly()
+                        ) else true
                 }.filter {
-                        if (filterDataItem.to != "to") it.utcDate.convertDateOnly().before(
-                            filterDataItem.to.convertDateOnly()
+                    if (filterObject.to != Constants.FilterDefaults.TO) it.utcDate.convertDateOnly()
+                        .before(
+                            filterObject.to.convertDateOnly()
                         ) else {
-                            true
-                        }
-                    }.filter {
-                        if (filterDataItem.fav) {
-                            it.isFav == true
-                        } else {
-                            true
-                        }
-                    } as MutableList<MatchDataItem>
+                        true
+                    }
+                }.filter {
+                    if (filterObject.fav) {
+                        it.isFav == true
+                    } else {
+                        true
+                    }
+                } as MutableList<MatchDataItem>
 
                 if (tomorrowMatches.isNotEmpty()) {
                     val matchDataItem = tomorrowMatches[0]
@@ -155,13 +163,13 @@ class MainViewModel(
         }
     }
 
-    fun favMatch(match: Match) {
+    private fun favMatch() {
         viewModelScope.launch {
             matchUseCase.favMatch(match)
         }
     }
 
-    fun unFavMatch(match: Match) {
+    private fun unFavMatch() {
         viewModelScope.launch {
             matchUseCase.unFavMatch(match)
         }

@@ -1,12 +1,9 @@
 package com.example.englishpremierleague.viewmodel
 
-import android.view.View
-import android.widget.Toast
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.lifecycleScope
 import com.example.englishpremierleague.base.BaseUnitTest
 import com.example.englishpremierleague.di.configureTestAppComponent
-import com.example.englishpremierleague.domain.model.remote.MatchResponse
+import com.example.englishpremierleague.domain.model.remote.MatchList
 import com.example.englishpremierleague.domain.usecase.MatchUseCase
 import com.example.englishpremierleague.presentation.main.model.MatchDataItem
 import com.example.englishpremierleague.presentation.main.viewmodel.MainViewModel
@@ -16,10 +13,8 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import junit.framework.Assert.assertNotNull
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -52,7 +47,7 @@ class MainViewModelTest : BaseUnitTest() {
         mainViewModel = MainViewModel(matchUseCase)
 
         val sampleResponse = getJson("matches.json")
-        val jsonObj = Gson().fromJson(sampleResponse, MatchResponse::class.java)
+        val jsonObj = Gson().fromJson(sampleResponse, MatchList::class.java)
 
         coEvery { matchUseCase.getMatches() } returns jsonObj.matches
 
