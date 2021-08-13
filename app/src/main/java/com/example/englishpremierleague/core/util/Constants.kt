@@ -27,6 +27,7 @@ object Constants {
         const val YESTERDAY = "Yesterday"
         const val TODAY = "Today"
         const val TOMORROW = "Tomorrow"
+        const val OTHER = "Other"
     }
 
     object MatchTypes{

@@ -27,9 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.koin.core.context.startKoin
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class MainViewModelTest : BaseUnitTest() {

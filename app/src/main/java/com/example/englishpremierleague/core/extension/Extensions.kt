@@ -4,24 +4,26 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
+import android.text.format.DateUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.example.englishpremierleague.R
 import com.example.englishpremierleague.core.util.Constants
+import com.example.englishpremierleague.core.util.Constants.Day.OTHER
+import com.example.englishpremierleague.core.util.Constants.Day.TODAY
+import com.example.englishpremierleague.core.util.Constants.Day.TOMORROW
+import com.example.englishpremierleague.core.util.Constants.Day.YESTERDAY
 import com.example.englishpremierleague.presentation.main.adapter.MatchesAdapter
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.time.DurationUnit
-import kotlin.time.ExperimentalTime
-import kotlin.time.milliseconds
 
 @SuppressLint("SimpleDateFormat")
-fun String.convertDate(): Date? {
+fun String.convertDate(): Date {
     return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(this)
 }
 
 @SuppressLint("SimpleDateFormat")
-fun String.convertDateOnly(): Date? {
+fun String.convertDateOnly(): Date {
     return SimpleDateFormat("yyyy-MM-dd").parse(this)
 }
 
@@ -49,20 +51,24 @@ fun String.extractTimeOnly(): String {
     return formatter.format(this.convertDate())
 }
 
-@ExperimentalTime
-fun Date.compareDates(): Int {
-    val firstCalendar = Calendar.getInstance()
-    firstCalendar.time = this
+fun Date.isToday(): Boolean {
+    return DateUtils.isToday(this.time)
+}
 
-    val secondCalendar = Calendar.getInstance()
+fun Date.isYesterday(): Boolean {
+    return DateUtils.isToday(this.time + DateUtils.DAY_IN_MILLIS)
+}
 
-    return if (firstCalendar.get(Calendar.YEAR) == secondCalendar.get(Calendar.YEAR) &&
-        firstCalendar.get(Calendar.MONTH) == secondCalendar.get(Calendar.MONTH)
-    ) {
-        firstCalendar.get(Calendar.DAY_OF_MONTH) - secondCalendar.get(Calendar.DAY_OF_MONTH)
-    } else {
-        val diffInMillis: Long = firstCalendar.timeInMillis - secondCalendar.timeInMillis
-        return diffInMillis.milliseconds.toInt(DurationUnit.DAYS)
+fun Date.isTomorrow(): Boolean {
+    return DateUtils.isToday(this.time - DateUtils.DAY_IN_MILLIS)
+}
+
+fun String.getDay(): String {
+    return when {
+        this.convertDate().isYesterday() -> { YESTERDAY }
+        this.convertDate().isToday() -> { TODAY }
+        this.convertDate().isTomorrow() -> { TOMORROW }
+        else -> { this.extractDateOnly() }
     }
 }
 

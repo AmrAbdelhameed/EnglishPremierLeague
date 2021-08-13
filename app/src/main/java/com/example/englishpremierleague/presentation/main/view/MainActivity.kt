@@ -22,9 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @ExperimentalCoroutinesApi
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()

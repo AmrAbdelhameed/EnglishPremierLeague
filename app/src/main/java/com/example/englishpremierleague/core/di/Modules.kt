@@ -13,7 +13,6 @@ import com.example.englishpremierleague.presentation.main.viewmodel.MainViewMode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import kotlin.time.ExperimentalTime
 
 val networkModule = module {
     single { ApiBuilder.Companion.apiService() }
@@ -36,7 +35,6 @@ val useCaseModule = module {
     single { MatchUseCase(get()) }
 }
 
-@ExperimentalTime
 @ExperimentalCoroutinesApi
 val viewModelModule = module {
     viewModel { MainViewModel(get()) }

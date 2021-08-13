@@ -5,9 +5,7 @@ import com.example.englishpremierleague.core.di.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 @ExperimentalCoroutinesApi
 open class CustomApplication : MultiDexApplication() {
     override fun onCreate() {

@@ -1,18 +1,11 @@
 package com.example.englishpremierleague.presentation.main.model
 
-import com.example.englishpremierleague.core.extension.compareDates
-import com.example.englishpremierleague.core.extension.convertDate
-import com.example.englishpremierleague.core.extension.extractDateOnly
-import com.example.englishpremierleague.core.extension.extractTimeOnly
+import com.example.englishpremierleague.core.extension.*
 import com.example.englishpremierleague.domain.model.remote.Score
-import com.example.englishpremierleague.core.util.Constants.Day.TODAY
-import com.example.englishpremierleague.core.util.Constants.Day.TOMORROW
-import com.example.englishpremierleague.core.util.Constants.Day.YESTERDAY
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.EXTRA_TIME
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.FULL_TIME
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.HALF_TIME
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.PENALTIES
-import kotlin.time.ExperimentalTime
 
 data class MatchDataItem(
     val id: Int,
@@ -32,13 +25,7 @@ data class MatchDataItem(
         else -> { "${score.penalties.homeTeam} : ${score.penalties.awayTeam}" }
     }
 
-    @ExperimentalTime
-    val formatDate: String = when (utcDate.convertDate()?.compareDates()) {
-        -1 -> YESTERDAY
-        0 -> TODAY
-        1 -> TOMORROW
-        else -> utcDate.extractDateOnly()
-    }
+    val formatDate: String = utcDate.getDay()
 
     val scoreOrTime: String = when (status) {
         HALF_TIME, FULL_TIME, EXTRA_TIME, PENALTIES -> { scoreStr }

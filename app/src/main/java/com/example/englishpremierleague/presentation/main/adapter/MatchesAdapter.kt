@@ -11,7 +11,6 @@ import com.example.englishpremierleague.databinding.MatchItemBinding
 import com.example.englishpremierleague.databinding.MatchesHorizontalItemBinding
 import com.example.englishpremierleague.presentation.main.model.MatchDataItem
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
-import kotlin.time.ExperimentalTime
 
 class MatchesAdapter(private var matchesList: List<MatchDataItem>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(),
@@ -67,7 +66,6 @@ class MatchesAdapter(private var matchesList: List<MatchDataItem>) :
         return HeaderViewHolder(binding)
     }
 
-    @ExperimentalTime
     override fun onBindHeaderViewHolder(holder: HeaderViewHolder, p1: Int) {
         holder.bind(matchesList[p1].formatDate)
     }
