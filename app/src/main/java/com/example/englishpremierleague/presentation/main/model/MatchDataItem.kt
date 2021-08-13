@@ -4,7 +4,6 @@ import com.example.englishpremierleague.core.extension.compareDates
 import com.example.englishpremierleague.core.extension.convertDate
 import com.example.englishpremierleague.core.extension.extractDateOnly
 import com.example.englishpremierleague.core.extension.extractTimeOnly
-import com.example.englishpremierleague.core.util.Constants
 import com.example.englishpremierleague.domain.model.remote.Score
 import com.example.englishpremierleague.core.util.Constants.Day.TODAY
 import com.example.englishpremierleague.core.util.Constants.Day.TOMORROW
@@ -23,7 +22,8 @@ data class MatchDataItem(
     val score: Score,
     val utcDate: String,
     var isFav: Boolean,
-    var headerId: Long? = 0
+    var headerId: Long = 0,
+    var matches: List<MatchDataItem> = arrayListOf()
 ) {
     val scoreStr: String = when (status) {
         HALF_TIME -> { "${score.halfTime.homeTeam} : ${score.halfTime.awayTeam}" }

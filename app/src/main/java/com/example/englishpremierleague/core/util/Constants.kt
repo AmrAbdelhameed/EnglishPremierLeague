@@ -28,4 +28,9 @@ object Constants {
         const val TODAY = "Today"
         const val TOMORROW = "Tomorrow"
     }
+
+    object MatchTypes{
+        const val ITEM = 1
+        const val LIST = 2
+    }
 }

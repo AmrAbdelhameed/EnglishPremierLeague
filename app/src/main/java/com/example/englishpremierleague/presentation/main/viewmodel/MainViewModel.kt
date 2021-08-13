@@ -2,6 +2,8 @@ package com.example.englishpremierleague.presentation.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.englishpremierleague.core.extension.compareDates
+import com.example.englishpremierleague.core.extension.convertDate
 import com.example.englishpremierleague.core.extension.convertDateOnly
 import com.example.englishpremierleague.core.extension.extractDateOnly
 import com.example.englishpremierleague.domain.model.local.Match
@@ -17,7 +19,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @ExperimentalCoroutinesApi
 class MainViewModel(
     private val matchUseCase: MatchUseCase
@@ -26,13 +30,16 @@ class MainViewModel(
     private val _state = MutableStateFlow<MainState>(MainState.Idle)
     val state: StateFlow<MainState>
         get() = _state
-    private var matchesList: List<MatchDataItem> = arrayListOf()
+    private var matchesList: MutableList<MatchDataItem> = mutableListOf()
     private val matchesId = Channel<List<Int>>(1)
+    private var todayMatches: List<MatchDataItem> = arrayListOf()
+    private var tomorrowMatches: List<MatchDataItem> = arrayListOf()
 
     init {
         handleIntent()
     }
 
+    @ExperimentalTime
     private fun handleIntent() {
         viewModelScope.launch {
             mainIntent.consumeAsFlow().collect {
@@ -44,18 +51,19 @@ class MainViewModel(
         }
     }
 
-    fun fetchFavMatches() {
+    private fun fetchFavMatches() {
         viewModelScope.launch {
             matchesId.send(matchUseCase.getFavMatches().map { it.matchId })
         }
     }
 
+    @ExperimentalTime
     fun fetchMatches() {
         viewModelScope.launch {
             for (ids in matchesId) {
                 _state.value = MainState.Loading
                 _state.value = try {
-                    matchesList = matchUseCase.getMatches().map {
+                    val tmpMatchesList = matchUseCase.getMatches().map {
                         MatchDataItem(
                             it.id,
                             it.homeTeam.name,
@@ -65,7 +73,24 @@ class MainViewModel(
                             it.utcDate,
                             ids.contains(it.id)
                         )
-                    }.sortedBy { it.utcDate }
+                    }.sortedBy { it.utcDate } as MutableList<MatchDataItem>
+                    todayMatches = tmpMatchesList.filter { it.utcDate.convertDate()?.compareDates() == 0 }
+                    tomorrowMatches = tmpMatchesList.filter { it.utcDate.convertDate()?.compareDates() == 1 }
+                    matchesList = tmpMatchesList.filter {
+                        it.utcDate.convertDate()?.compareDates() != 0 }
+                            .filter {
+                                it.utcDate.convertDate()?.compareDates() != 1
+                            } as MutableList<MatchDataItem>
+                    if (tomorrowMatches.isNotEmpty()) {
+                        val matchDataItem = tomorrowMatches[0]
+                        matchDataItem.matches = tomorrowMatches
+                        matchesList.add(0, matchDataItem)
+                    }
+                    if (todayMatches.isNotEmpty()) {
+                        val matchDataItem = todayMatches[0]
+                        matchDataItem.matches = todayMatches
+                        matchesList.add(0, matchDataItem)
+                    }
                     MainState.Success(setHeaderId(matchesList))
                 } catch (e: Exception) {
                     MainState.Error(e.localizedMessage)
@@ -91,10 +116,9 @@ class MainViewModel(
         viewModelScope.launch {
             _state.value = MainState.Loading
             _state.value = try {
-                MainState.Success(matchesList
-                    .filter {
-                        if (filterDataItem.status != "all") it.status == filterDataItem.status else true
-                    }
+                var tmpMatchesList: MutableList<MatchDataItem> = matchesList.filter {
+                    if (filterDataItem.status != "all") it.status == filterDataItem.status else true
+                }
                     .filter {
                         if (filterDataItem.from != "from") it.utcDate.convertDateOnly()?.after(
                             filterDataItem.from.convertDateOnly()
@@ -113,8 +137,39 @@ class MainViewModel(
                         } else {
                             true
                         }
+                    } as MutableList<MatchDataItem>
+                tmpMatchesList = tmpMatchesList.filter{
+                    it.utcDate.convertDate()?.compareDates() != 0 }
+                    .filter {
+                        it.utcDate.convertDate()?.compareDates() != 1
+                    } as MutableList<MatchDataItem>
+                if (tomorrowMatches.isNotEmpty()) {
+                    val matchDataItem = tomorrowMatches[0]
+                    matchDataItem.matches = tomorrowMatches.filter {
+                        if (filterDataItem.status != "all") it.status == filterDataItem.status else true
+                    }.filter {
+                        if (filterDataItem.fav) {
+                            it.isFav == true
+                        } else {
+                            true
+                        }
                     }
-                )
+                    tmpMatchesList.add(0, matchDataItem)
+                }
+                if (todayMatches.isNotEmpty()) {
+                    val matchDataItem = todayMatches[0]
+                    matchDataItem.matches = todayMatches.filter {
+                        if (filterDataItem.status != "all") it.status == filterDataItem.status else true
+                    }.filter {
+                        if (filterDataItem.fav) {
+                            it.isFav == true
+                        } else {
+                            true
+                        }
+                    }
+                    tmpMatchesList.add(0, matchDataItem)
+                }
+                MainState.Success(tmpMatchesList)
             } catch (e: Exception) {
                 MainState.Error(e.localizedMessage)
             }
