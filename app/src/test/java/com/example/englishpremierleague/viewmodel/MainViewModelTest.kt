@@ -51,18 +51,18 @@ class MainViewModelTest : BaseUnitTest() {
 
         coEvery { matchUseCase.getMatches() } returns jsonObj.matches
 
-        mainViewModel.fetchMatches()
+        runBlockingTest { mainViewModel.fetchMatches() }
 
         var matches: List<MatchDataItem>? = null
-            runBlockingTest {
-                mainViewModel.state.collect {
-                    when (it) {
-                        is MainState.Success -> {
-                            matches = it.matches
-                        }
+        runBlockingTest {
+            mainViewModel.state.collect {
+                when (it) {
+                    is MainState.Success -> {
+                        matches = it.matches
                     }
                 }
             }
+        }
         assertNotNull(matches)
     }
 }

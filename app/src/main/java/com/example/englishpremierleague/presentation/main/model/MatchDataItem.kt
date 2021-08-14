@@ -1,12 +1,12 @@
 package com.example.englishpremierleague.presentation.main.model
 
-import com.example.englishpremierleague.core.extension.*
-import com.example.englishpremierleague.domain.model.remote.Score
+import com.example.englishpremierleague.core.extension.extractTimeOnly
+import com.example.englishpremierleague.core.extension.getDay
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.EXTRA_TIME
-import com.example.englishpremierleague.core.util.Constants.MatchStatus.FINISHED
-import com.example.englishpremierleague.core.util.Constants.MatchStatus.FULL_TIME
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.HALF_TIME
 import com.example.englishpremierleague.core.util.Constants.MatchStatus.PENALTIES
+import com.example.englishpremierleague.core.util.Constants.MatchStatus.SCHEDULED
+import com.example.englishpremierleague.domain.model.remote.Score
 
 data class MatchDataItem(
     val id: Int,
@@ -29,7 +29,7 @@ data class MatchDataItem(
     val formatDate: String = utcDate.getDay()
 
     val scoreOrTime: String = when (status) {
-        HALF_TIME, FULL_TIME, EXTRA_TIME, PENALTIES, FINISHED -> { scoreStr }
-        else -> { utcDate.extractTimeOnly() }
+        SCHEDULED -> { utcDate.extractTimeOnly() }
+        else -> { scoreStr }
     }
 }
